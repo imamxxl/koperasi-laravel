@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layout/template');
 });
+
+route::view('/dashboard', 'admin.dashboard.index');
+route::view('/laporan', 'agen.laporan.index');
+route::view('/angsuran', 'anggota.angsuran.index');

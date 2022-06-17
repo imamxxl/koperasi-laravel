@@ -1,121 +1,149 @@
 @extends('layout.template')
-@section('title', 'Pinjaman')
+@section('title', 'Anggota')
 
 @section('content')
-
     <!-- Main content -->
+
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
-
                 <div class="box">
-
-                    <div class="box-body">
+                    {{-- <div class="box-body">
                         <button type="button" class="btn btn-lg btn-success fa fa-plus" data-toggle="modal"
                             data-target="#modal-add">
                             Tambah Data
                         </button>
-                    </div>
+                    </div> --}}
 
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">DataTable with default features</h3>
                         </div>
 
-                        <div class="card-body box-body table-hover">
+                        {{-- <div class="card-body box-body table-hover">
                             <table id="datatableid" class="table table-bordered table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Anggota</th>
-                                        <th>Jmlh Pinjaman</th>
-                                        <th>Tenor</th>
-                                        <th>Keterangan</th>
-                                        <th>Status</th>
+                                        <th>Nama</th>
+                                        <th>No Anggota</th>
+                                        <th>JK</th>
+                                        <th>Pekerjaan</th>
+                                        <th>Alamat</th>
+                                        <th>No. Telp</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $no = 1; ?>
-                                    @foreach ($pinjaman as $data)
+                                    @foreach ($anggota as $data)
                                         <tr>
                                             <td class="content-header">{{ $no++ }}</td>
-                                            <td>{{ $data->no_pinjaman }}</td>
                                             <td>{{ $data->nama }}</td>
-                                            <td>{{ $data->tanggal }}</td>
-                                            <td>{{ $data->jumlah_pinjaman }}</td>
-                                            <td>{{ $data->tenor }}</td>
-                                            <td>{{ $data->total_angsuran }}</td>
-                                            <td>{{ $data->keterangan }}</td>
-                                            <!-- Status Pinjaman -->
-                                            @if ($data->status == 'diterima')
-                                                <td>
-                                                    <span class="label label-success" data-id="{{ $data->status }}">Di
-                                                        terima</span>
-                                                </td>
-                                            @elseif ($data->status == 'ditolak')
-                                                <td>
-                                                    <span class="label label-danger" data-id="{{ $data->status }}">Di
-                                                        tolak</span>
-                                                </td>
-                                            @else
-                                                <td>
-                                                    <span class="label label-warning" data-id="{{ $data->status }}">Di
-                                                        proses</span>
-                                                </td>
-                                            @endif
-                                            {{-- <td>
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                data-target="#modal-edit{{ $data->kode_mk }}">
-                                                <i class="fa fa-fw fa-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#modal-nonaktif{{ $data->kode_mk }}">
-                                                <i class="fa fa-fw fa-trash"></i>
-                                            </button>
-                                        </td> --}}
+                                            <td>{{ $data->email }}</td>
+                                            <td>{{ $data->jk }}</td>
+                                            <td>{{ $data->pekerjaan }}</td>
+                                            <td>{{ $data->alamat }}</td>
+                                            <td>{{ $data->no_telp }}</td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div> --}}
+
+                        <div class="container">
+                            <h1>Laravel 8 Crud with Ajax</h1>
+                            <a class="btn btn-success" href="javascript:void(0)" id="createNewBook"> Create New Book</a>
+                            <table class="table table-bordered data-table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>No Anggota</th>
+                                        <th>JK</th>
+                                        <th>Pekerjaan</th>
+                                        <th>Alamat</th>
+                                        <th>No. Telp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
 
-                        <!-- Modal Add -->
-                        <div class="modal fade" id="modal-add">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title">Tambah Data Matakuliah</h4>
-                                    </div>
-
-                                    <div class="modal-header">
-                                        <div class="callout callout-warning">
-                                            <p><b>Peringatan!!!</b><br>
-                                                Pastikan input data Matakuliah sudah benar. Data <b>Kode Matakuliah</b>
-                                                yang sudah diinputkan merupakan data permanen yang tidak dapat diubah atau
-                                                dihapus untuk alasan keamanan.
-                                            </p>
+                    <!-- form ajax -->
+                    <div class="modal fade" id="ajaxModel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="modelHeading"></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="anggotaForm" name="anggotaForm" class="form-horizontal">
+                                       <input type="hidden" name="id" id="id">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">nama</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="nama" name="nama" placeholder="Enter nama" value="" maxlength="50" required="">
+                                            </div>
                                         </div>
-                                    </div>
+                         
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Email</label>
+                                            <div class="col-sm-12">
+                                                <textarea id="email" name="email" required="" placeholder="Enter email" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                          
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                         <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                                         </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                    <div class="modal-body">
-                                        <form action="/matakuliah/add/insert" method="POST" enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="box-body">
-                                                <div class="form-group">
-                                                    <label>ID Anggota</label>
-                                                    <label class="text-danger">*</label>
-                                                    <input type="text" name="anggota" class="form-control"
-                                                        value="{{ old('anggota') }}" placeholder="Contoh: 123">
-                                                    <div class="text-danger">
-                                                        @error('anggota')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
+                    <!-- Modal Add -->
+                    <div class="modal fade" id="modal-add">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">Tambah Data Matakuliah</h4>
+                                </div>
+
+                                <div class="modal-header">
+                                    <div class="callout callout-warning">
+                                        <p><b>Peringatan!!!</b><br>
+                                            Pastikan input data Matakuliah sudah benar. Data <b>Kode Matakuliah</b>
+                                            yang sudah diinputkan merupakan data permanen yang tidak dapat diubah atau
+                                            dihapus untuk alasan keamanan.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="modal-body">
+                                    <form action="/matakuliah/add/insert" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>ID Anggota</label>
+                                                <label class="text-danger">*</label>
+                                                <input type="text" name="anggota" class="form-control"
+                                                    value="{{ old('anggota') }}" placeholder="Contoh: 123">
+                                                <div class="text-danger">
+                                                    @error('anggota')
+                                                        {{ $message }}
+                                                    @enderror
                                                 </div>
-                                                {{-- <div class="form-group">
+                                            </div>
+                                            {{-- <div class="form-group">
                                                 <label>Nama Matakuliah</label>
                                                 <label class="text-danger">*</label>
                                                 <input type="text" name="nama_mk" class="form-control"
@@ -168,26 +196,52 @@
                                                     @enderror
                                                 </div>
                                             </div> --}}
-                                                <div class="form-group">
-                                                    <p>Keterangan: <a class="text-danger disabled">(*) Wajib diisi</a> </p>
-                                                </div>
+                                            <div class="form-group">
+                                                <p>Keterangan: <a class="text-danger disabled">(*) Wajib diisi</a> </p>
                                             </div>
-                                    </div>
-                                    <!-- /.box-body -->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default btn-block"
-                                            data-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-primary btn-block" value="submit">Simpan
-                                        </button>
-                                    </div>
+                                        </div>
+                                    </form>
+                                    <form id="anggotaForm" name="anggotaForm" class="form-horizontal">
+                                        <input name="id" id="id">
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-2 control-label">nama</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="nama" name="nama"
+                                                    placeholder="Enter nama" value="" maxlength="50"
+                                                    required="">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Details</label>
+                                            <div class="col-sm-12">
+                                                <textarea id="email" name="email" required="" placeholder="Enter email" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Details</label>
+                                            <div class="col-sm-12">
+                                                <textarea id="email" name="email" required="" placeholder="Enter email" class="form-control"></textarea>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-                        <!-- /.modal -->
 
-                        {{-- <!-- Modal Edit -->
+                                <!-- /.box-body -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-block"
+                                        data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary btn-block" id="saveBtn"
+                                        value="submit">Simpan
+                                    </button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- <!-- Modal Edit -->
                     @foreach ($matakuliah as $data)
                         <div class="modal fade" id="modal-edit{{ $data->kode_mk }}">
                             <div class="modal-dialog">
@@ -311,7 +365,6 @@
                         <!-- /.modal -->
                     @endforeach --}}
 
-                    </div>
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
@@ -321,7 +374,13 @@
 
     <script src="{{ asset('template') }}/bower_components/jquery/dist/jquery.min.js"></script>
 
-    {{-- <script type="text/javascript">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
         $(function() {
             $.ajaxSetup({
                 headers: {
@@ -331,18 +390,18 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('books.index') }}",
+                ajax: "{{ route('anggota.index') }}",
                 columns: [{
-                        data: 'title',
-                        name: 'title'
+                        data: 'nama',
+                        name: 'nama'
                     },
                     {
-                        data: 'title',
-                        name: 'title'
+                        data: 'nama',
+                        name: 'nama'
                     },
                     {
-                        data: 'author',
-                        name: 'author'
+                        data: 'email',
+                        name: 'email'
                     },
                     {
                         data: 'action',
@@ -354,20 +413,20 @@
             });
             $('#createNewBook').click(function() {
                 $('#saveBtn').val("create-book");
-                $('#book_id').val('');
-                $('#bookForm').trigger("reset");
+                $('#id').val('');
+                $('#anggotaForm').trigger("reset");
                 $('#modelHeading').html("Create New Book");
                 $('#ajaxModel').modal('show');
             });
             $('body').on('click', '.editBook', function() {
-                var book_id = $(this).data('id');
-                $.get("{{ route('books.index') }}" + '/' + book_id + '/edit', function(data) {
+                var id = $(this).data('id');
+                $.get("{{ route('anggota.index') }}" + '/' + id + '/edit', function(data) {
                     $('#modelHeading').html("Edit Book");
                     $('#saveBtn').val("edit-book");
                     $('#ajaxModel').modal('show');
-                    $('#book_id').val(data.id);
-                    $('#title').val(data.title);
-                    $('#author').val(data.author);
+                    $('#id').val(data.id);
+                    $('#nama').val(data.nama);
+                    $('#email').val(data.email);
                 })
             });
             $('#saveBtn').click(function(e) {
@@ -375,13 +434,12 @@
                 $(this).html('Save');
 
                 $.ajax({
-                    data: $('#bookForm').serialize(),
-                    url: "{{ route('books.store') }}",
+                    data: $('#anggotaForm').serialize(),
+                    url: "{{ route('anggota.store') }}",
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-
-                        $('#bookForm').trigger("reset");
+                        $('#anggotaForm').trigger("reset");
                         $('#ajaxModel').modal('hide');
                         table.draw();
 
@@ -394,13 +452,12 @@
             });
 
             $('body').on('click', '.deleteBook', function() {
-
-                var book_id = $(this).data("id");
+                var id = $(this).data("id");
                 confirm("Are You sure want to delete !");
 
                 $.ajax({
                     type: "DELETE",
-                    url: "{{ route('books.store') }}" + '/' + book_id,
+                    url: "{{ route('anggota.store') }}" + '/' + id,
                     success: function(data) {
                         table.draw();
                     },
@@ -411,6 +468,5 @@
             });
 
         });
-    </script> --}}
-
+    </script>
 @endsection

@@ -67,4 +67,30 @@
             <p>Informational</p>
         </a>
     </li>
+    <li class="nav-header">Agen</li>
+    <li class="nav-item">
+        <a href="/anggota" class="nav-link">
+            <i class="nav-icon fas fa-user"></i>
+            <p>Anggota</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/angsuran_agen" class="nav-link">
+            <i class="nav-icon fas fa-calculator"></i>
+            <p>Angsuran</p>
+        </a>
+    </li>
+    <li class="nav-header">Anggota</li>
+    <li class="nav-item">
+        <a href="/pinjaman_anggota" class="nav-link">
+            <i class="nav-icon fas fa-book"></i>
+            <p>Pinjaman</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/angsuran_anggota" class="nav-link">
+            <i class="nav-icon fas fa-calculator"></i>
+            <p>Angsuran</p>
+        </a>
+    </li>
 </ul>
